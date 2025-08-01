@@ -20,6 +20,39 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "rootDirs": [
+      "./src",
+      "./generated"
+    ],
+    "paths": {
+      "@generated/*": [
+        "generated/*"
+      ],
+      "@common/*": [
+        "src/common/*"
+      ],
+      "@config/*": [
+        "src/config/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@modules/*": [
+        "src/modules/*"
+      ],
+      "@jobs/*": [
+        "src/jobs/*"
+      ],
+      "@global/*": [
+        "src/global/*"
+      ],
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "src", "generated"
+  ]
 }

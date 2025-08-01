@@ -1,4 +1,4 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -83,5 +83,5 @@ main()
     console.error(e);
     process.exit(1);
   })
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+
   .finally(() => prisma.$disconnect());
