@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JwtTokenTooLargeException } from '@core/auth/common/auth.exceptions';
+import { JwtTokenTooLargeException } from '@core/auth/auth.exceptions';
 
 @Injectable()
 export class AuthValidator {

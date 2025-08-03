@@ -7,16 +7,17 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-import { UserService } from '../../user/user.service';
-import { AuthHelper } from '../common/auth.helper';
-import { AuthValidator } from '../common/auth.validator';
-import { UserPayload } from '@core/auth/common/auth.interfaces';
+import { UserService } from '../user/user.service';
+import { AuthHelper } from './auth.helper';
+import { AuthValidator } from './auth.validator';
+import { UserPayload } from '@core/auth/auth.interfaces';
 import { HashHelper } from '@common/helpers/hash.helper';
-import { InvalidCredentialsException } from '@core/auth/common/auth.exceptions';
+import { InvalidCredentialsException } from '@core/auth/auth.exceptions';
+import { Profile } from 'passport-google-oauth20';
 
 @Injectable()
-export class AuthLocalService {
-  private readonly logger = new Logger(AuthLocalService.name);
+export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
 
   private readonly accessExpiresIn: string;
   private readonly refreshExpiresIn: string;
@@ -96,6 +97,39 @@ export class AuthLocalService {
     } catch (error) {
       this.logger.error(`Error during token refresh: ${error}`);
       this.unauthorize();
+    }
+  }
+
+  async googleValidateUser(profile: Profile) {
+    try {
+      const email = profile.emails?.[0]?.value;
+      const googleId = profile.id;
+      const displayName = profile.displayName;
+      const avatarUrl = profile.photos?.[0]?.value || null;
+
+      if (!email || !googleId || !displayName) {
+        this.logger.warn('Invalid Google profile data');
+        throw new UnauthorizedException('Invalid Google profile data');
+      }
+
+      const existingUser = await this.userService.findToAuth(email);
+      if (existingUser) return existingUser;
+
+      const [firstName, ...rest] = displayName.split(' ');
+      const lastName = rest.join(' ') || firstName;
+
+      return await this.userService.create({
+        email,
+        googleId,
+        displayName,
+        password: null,
+        firstName,
+        lastName,
+        avatarUrl,
+      });
+    } catch (error) {
+      this.logger.error('Failed to validate Google user', error.stack);
+      throw new UnauthorizedException('Failed to authenticate with Google');
     }
   }
 

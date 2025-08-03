@@ -1,8 +1,8 @@
 import { ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthRedisHelper } from '@core/auth/common/auth-redis.helper';
-import { AuthHelper } from '@core/auth/common/auth.helper';
-import { InvalidRefreshTokenException } from '@core/auth/common/auth.exceptions';
+import { AuthRedisHelper } from '@core/auth/auth-redis.helper';
+import { AuthHelper } from '@core/auth/auth.helper';
+import { InvalidRefreshTokenException } from '@core/auth/auth.exceptions';
 
 @Injectable()
 export class JwtRefreshGuard extends AuthGuard('jwt') {

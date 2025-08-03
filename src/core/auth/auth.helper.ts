@@ -3,12 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import ms, { StringValue } from 'ms';
 import { JwtVerifyOptions } from '@nestjs/jwt';
-import { InvalidAccessTokenException } from '@core/auth/common/auth.exceptions';
+import { InvalidAccessTokenException } from '@core/auth/auth.exceptions';
 import { JwtHelper } from '@common/helpers/jwt.helper';
-import {
-  JwtSignedFields,
-  UserPayload,
-} from '@core/auth/common/auth.interfaces';
+import { JwtSignedFields, UserPayload } from '@core/auth/auth.interfaces';
 
 @Injectable()
 export class AuthHelper {

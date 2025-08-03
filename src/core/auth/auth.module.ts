@@ -5,18 +5,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { CommonModule } from '@common/common.module';
 import { UserModule } from '../user/user.module';
-import { AuthRedisHelper } from './common/auth-redis.helper';
-import { AuthLocalController } from './local/auth-local.controller';
-import { AuthHelper } from './common/auth.helper';
-import { AuthLocalService } from './local/auth-local.service';
-import { AuthValidator } from './common/auth.validator';
-import { JwtAccessGuard } from '@core/auth/local/guards/jwt-access.guard';
-import { JwtStrategy } from '@core/auth/local/strategies/jwt.strategy';
-import { LocalStrategy } from '@core/auth/local/strategies/local.strategy';
-import { AdminGuard } from '@core/auth/local/guards/admin.guard';
-import { GoogleStrategy } from '@core/auth/google/strategies/google.strategy';
-import { AuthGoogleController } from '@core/auth/google/auth-google.controller';
-import { AuthGoogleService } from '@core/auth/google/auth-google.service';
+import { AuthRedisHelper } from './auth-redis.helper';
+import { AuthController } from './auth.controller';
+import { AuthHelper } from './auth.helper';
+import { AuthService } from './auth.service';
+import { AuthValidator } from './auth.validator';
+import { JwtAccessGuard } from '@core/auth/guards/jwt-access.guard';
+import { JwtStrategy } from '@core/auth/strategies/jwt.strategy';
+import { LocalStrategy } from '@core/auth/strategies/local.strategy';
+import { AdminGuard } from '@core/auth/guards/admin.guard';
+import { GoogleStrategy } from '@core/auth/strategies/google.strategy';
 
 @Module({
   imports: [
@@ -43,10 +41,9 @@ import { AuthGoogleService } from '@core/auth/google/auth-google.service';
     UserModule,
     PassportModule,
   ],
-  controllers: [AuthLocalController, AuthGoogleController],
+  controllers: [AuthController],
   providers: [
-    AuthLocalService,
-    AuthGoogleService,
+    AuthService,
     AuthHelper,
     AuthValidator,
     AuthRedisHelper,
@@ -62,6 +59,6 @@ import { AuthGoogleService } from '@core/auth/google/auth-google.service';
       useClass: AdminGuard,
     },
   ],
-  exports: [AuthLocalService, AuthHelper],
+  exports: [AuthService, AuthHelper],
 })
 export class AuthModule {}

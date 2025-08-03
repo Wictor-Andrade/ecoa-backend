@@ -7,7 +7,7 @@ import { envSchema } from '@config/env.validation';
 import { BULL_CONFIG_KEY, BullConfig } from '@config/queue.config';
 import { REDIS_COMMON_CONNECTION_KEY, RedisConfig } from '@config/redis.config';
 import { AuthModule } from '@core/auth/auth.module';
-import { ExternalServiceAuthMiddleware } from '@core/auth/common/middlewares/external-service-auth.middleware';
+import { ExternalServiceAuthMiddleware } from '@core/auth/middlewares/external-service-auth.middleware';
 import { PrismaModule } from '@core/prisma/prisma.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { BullModule } from '@nestjs/bullmq';

@@ -1,12 +1,12 @@
 import {
   MetadataAdminRoute,
   ROLES_USER_KEY,
-} from '@core/auth/common/decorators/admin-role.decorator';
+} from '@core/auth/decorators/admin-role.decorator';
 import { ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { UserPayload } from '@core/auth/common/auth.interfaces';
-import { UserUnauthorizedException } from '@core/auth/common/auth.exceptions';
+import { UserPayload } from '@core/auth/auth.interfaces';
+import { UserUnauthorizedException } from '@core/auth/auth.exceptions';
 import { UserRole } from '@generated/prisma/enums';
 
 @Injectable()

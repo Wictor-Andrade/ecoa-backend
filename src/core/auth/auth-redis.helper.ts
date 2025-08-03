@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
 import ms from 'ms';
-import { InvalidRefreshTokenException } from '@core/auth/common/auth.exceptions';
+import { InvalidRefreshTokenException } from '@core/auth/auth.exceptions';
 
 @Injectable()
 export class AuthRedisHelper {

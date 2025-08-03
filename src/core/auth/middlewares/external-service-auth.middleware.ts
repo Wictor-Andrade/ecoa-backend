@@ -1,7 +1,7 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { AuthHelper } from '@core/auth/common/auth.helper';
-import { UserUnauthorizedException } from '@core/auth/common/auth.exceptions';
+import { AuthHelper } from '@core/auth/auth.helper';
+import { UserUnauthorizedException } from '@core/auth/auth.exceptions';
 import { UserRole } from '@generated/prisma/enums';
 
 @Injectable()
