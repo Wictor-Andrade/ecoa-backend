@@ -1,16 +1,53 @@
-import { PrismaClient } from '@prisma/client';
+import * as argon2 from 'argon2';
+import { PrismaClient } from '@generated/prisma/client';
+import {
+  ComplaintCategory,
+  ComplaintStatus,
+  UserCityRole,
+  UserRole,
+} from '@generated/prisma/enums';
 
 const prisma = new PrismaClient();
 
-async function main() {
+export async function main() {
+  const carambei = await prisma.city.upsert({
+    where: { name: 'Carambeí' },
+    update: {},
+    create: {
+      name: 'Carambeí',
+      state: 'Paraná',
+    },
+  });
+
+  const passwordHash = await argon2.hash('12345678');
+
+  await prisma.user.upsert({
+    where: { email: 'admin@ecoa.com' },
+    update: {},
+    create: {
+      displayName: 'Admin',
+      firstName: 'Admin',
+      lastName: 'Ecoa',
+      email: 'admin@ecoa.com',
+      googleId: 'admin-google-id',
+      password: passwordHash,
+      role: UserRole.ADMIN,
+    },
+  });
+
   const admin = await prisma.user.upsert({
     where: { email: 'admin@prefeitura.com' },
     update: {},
     create: {
-      name: 'Admin da Prefeitura',
-      email: 'admin@prefeitura.com',
-      googleId: 'admin-google-id',
-      isAdmin: true,
+      displayName: 'Admin Carambeí',
+      firstName: 'Admin',
+      lastName: 'Carambeí',
+      email: 'admin@carambei.com',
+      googleId: 'admin-carambei-google-id',
+      password: passwordHash,
+      cities: {
+        create: { cityId: carambei.id, role: UserCityRole.ADMIN },
+      },
     },
   });
 
@@ -18,10 +55,15 @@ async function main() {
     where: { email: 'joao@gmail.com' },
     update: {},
     create: {
-      name: 'João da Silva',
+      displayName: 'João da Silva',
+      firstName: 'João',
+      lastName: 'da Silva',
       email: 'joao@gmail.com',
       googleId: 'joao-google-id',
-      isAdmin: false,
+      password: passwordHash,
+      cities: {
+        create: { cityId: carambei.id, role: UserCityRole.CITIZEN },
+      },
     },
   });
 
@@ -29,10 +71,11 @@ async function main() {
     data: {
       title: 'Luz queimada na rua',
       description: 'O poste da Rua A está sem luz faz 3 dias.',
-      category: 'ILUMINACAO',
+      category: ComplaintCategory.ILUMINACAO,
       location: 'Rua A, Centro',
       userId: user.id,
-      status: 'PENDING',
+      status: ComplaintStatus.PENDING,
+      cityId: carambei.id,
     },
   });
 
@@ -40,10 +83,11 @@ async function main() {
     data: {
       title: 'Buraco enorme',
       description: 'Tem um buraco perigoso na esquina da Rua B.',
-      category: 'BURACO',
+      category: ComplaintCategory.BURACO,
       location: 'Rua B com Rua C',
       userId: user.id,
-      status: 'IN_PROGRESS',
+      status: ComplaintStatus.IN_PROGRESS,
+      cityId: carambei.id,
     },
   });
 
@@ -51,10 +95,11 @@ async function main() {
     data: {
       title: 'Lixo acumulado',
       description: 'O caminhão de lixo não passa há 1 semana.',
-      category: 'LIXO',
+      category: ComplaintCategory.LIXO,
       location: 'Rua D',
       userId: user.id,
-      status: 'RESOLVED',
+      status: ComplaintStatus.RESOLVED,
+      cityId: carambei.id,
     },
   });
 
@@ -83,5 +128,6 @@ main()
     console.error(e);
     process.exit(1);
   })
-
-  .finally(() => prisma.$disconnect());
+  .finally(() => {
+    prisma.$disconnect();
+  });

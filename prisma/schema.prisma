@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -7,18 +9,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  googleId  String   @unique
-  isAdmin   Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  displayName String   @unique
+  firstName   String
+  lastName    String
+  email       String   @unique
+  googleId    String   @unique
+  avatarUrl   String?
+  password    String?
+  role        UserRole @default(USER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   complaints Complaint[]
   responses  Response[]
   upvoted    Complaint[] @relation("Upvotes")
+  cities     UserCity[]
+}
+
+enum UserCityRole {
+  CITIZEN
+  ADMIN
+}
+
+model UserCity {
+  userId String
+  cityId String
+  role   UserCityRole
+
+  user User @relation(fields: [userId], references: [id])
+  city City @relation(fields: [cityId], references: [id])
+
+  @@id([userId, cityId])
+}
+
+model City {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  state     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  complaints Complaint[]
+  UserCity   UserCity[]
 }
 
 model Complaint {
@@ -31,10 +70,11 @@ model Complaint {
   updatedAt   DateTime          @updatedAt
   userId      String
   user        User              @relation(fields: [userId], references: [id])
+  cityId      String
+  city        City              @relation(fields: [cityId], references: [id])
   response    Response?
   status      ComplaintStatus   @default(PENDING)
-
-  upvotes User[] @relation("Upvotes")
+  upvotes     User[]            @relation("Upvotes")
 }
 
 model Response {

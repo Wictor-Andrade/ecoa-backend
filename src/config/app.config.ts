@@ -33,5 +33,36 @@ export function configuration() {
       port: process.env.POSTGRES_PORT,
       url: process.env.DATABASE_URL,
     },
+    google: {
+      client: {
+        id: process.env.GOOGLE_CLIENT_ID,
+        secret: process.env.GOOGLE_CLIENT_SECRET,
+      },
+      callbackUrl: process.env.GOOGLE_CALLBACK_URL,
+    },
+    redis: {
+      common: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASSWORD,
+        db: process.env.REDIS_DB,
+      },
+      bullmq: {
+        host: process.env.REDIS_BULLMQ_HOST,
+        port: process.env.REDIS_BULLMQ_PORT,
+        password: process.env.REDIS_BULLMQ_PASSWORD,
+        db: process.env.REDIS_BULLMQ_DB,
+      },
+    },
+    aws: {
+      region: process.env.AWS_REGION,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      s3: {
+        tempFolder: process.env.AWS_S3_TEMP_FOLDER,
+        bucket: process.env.AWS_S3_BUCKET,
+        endpoint: process.env.AWS_S3_ENDPOINT,
+      },
+    },
   };
 }

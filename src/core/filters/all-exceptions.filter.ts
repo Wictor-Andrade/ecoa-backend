@@ -9,7 +9,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@generated/prisma/client';
 
 type ExceptionInfo = {
   statusCode: number;
